@@ -1,0 +1,85 @@
+{
+  "name": "Focar Lab CRM - Lead Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "focarlab-lead-intake",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      },
+      "id": "Webhook_1",
+      "name": "Lead Intake Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 260]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            { "name": "eventType", "value": "lead.created" },
+            { "name": "data.fullName", "value": "={{$json.body.fullName}}" },
+            { "name": "data.email", "value": "={{$json.body.email}}" },
+            { "name": "data.phone", "value": "={{$json.body.phone}}" },
+            { "name": "data.company", "value": "={{$json.body.company}}" },
+            { "name": "data.courseInterest", "value": "={{$json.body.courseInterest}}" },
+            { "name": "data.source", "value": "={{$json.body.source || 'Manual'}}" },
+            { "name": "data.externalId", "value": "={{$json.body.externalId}}" }
+          ],
+          "number": [
+            { "name": "data.potentialRevenue", "value": "={{$json.body.potentialRevenue || 0}}" }
+          ]
+        }
+      },
+      "id": "Set_1",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [520, 260]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://backend:8080/api/webhooks/n8n",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "X-Webhook-Secret", "value": "={{$env.WEBHOOK_SECRET}}" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json}}"
+      },
+      "id": "HttpRequest_1",
+      "name": "Send To CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [840, 260]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}"
+      },
+      "id": "Respond_1",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1140, 260]
+    }
+  ],
+  "connections": {
+    "Lead Intake Webhook": {
+      "main": [[{ "node": "Normalize Payload", "type": "main", "index": 0 }]]
+    },
+    "Normalize Payload": {
+      "main": [[{ "node": "Send To CRM", "type": "main", "index": 0 }]]
+    },
+    "Send To CRM": {
+      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "eventType": "lead.created",
+  "data": {
+    "fullName": "Ana Costa",
+    "email": "ana@example.com",
+    "phone": "+5511999999999",
+    "company": "Escola Horizonte",
+    "courseInterest": "Laboratorio de IA",
+    "source": "WhatsApp",
+    "potentialRevenue": 3500,
+    "externalId": "lead_ana_001"
+  }
+}

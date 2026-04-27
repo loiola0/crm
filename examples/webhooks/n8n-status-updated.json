@@ -1,0 +1,7 @@
+{
+  "eventType": "lead.status.updated",
+  "data": {
+    "leadId": "d97207f8-a3c1-4eb2-90d5-84f0a1a7d950",
+    "status": "Qualified"
+  }
+}

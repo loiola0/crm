@@ -1,0 +1,14 @@
+FROM debian:bookworm-slim AS runtime
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates libicu72 libssl3 tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
+
+COPY .docker-publish/ ./
+RUN chmod +x /app/FocarLab.CRM.API
+
+ENTRYPOINT ["./FocarLab.CRM.API"]

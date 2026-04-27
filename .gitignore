@@ -1,0 +1,11 @@
+backend/**/bin/
+backend/**/obj/
+backend/.vs/
+frontend/app/node_modules/
+frontend/app/dist/
+frontend/app/.vite/
+.docker-publish/
+logs/
+.env
+.env.local
+.DS_Store
